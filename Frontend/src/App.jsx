@@ -1,24 +1,48 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
-import  Map  from './components/map/Map.jsx'
-import Navbar from './components/Navbar.jsx'
-import Coordinates from './components/Coordinates.jsx'
+import { useEffect, useState } from 'react';
+import './App.css';
+import Map from './components/map/Map.jsx';
+import Navbar from './components/Navbar.jsx';
+import Coordinates from './components/Coordinates.jsx';
+
 function App() {
   const [startPos, setStartPos] = useState(null);
   const [shortestPath, setShortestPath] = useState(null);
-  console.log("shortestPath", shortestPath)
   const [endPos, setEndPos] = useState(null);
-  console.log("Start Position new:", startPos)
-  console.log("End Position new:", endPos)
+  const [show_data, set_data] = useState([]);
+  const [isPanelOpen, setIsPanelOpen] = useState(true);
+  const [search_value_st,set_search_value_st] = useState('')
+  const [search_value_end, set_search_value_end] = useState('')
+  const togglePanel = () => setIsPanelOpen(prev => !prev);
+  
   return (
     <>
-      <Navbar/>
-      <Coordinates startPos={startPos} endPos={endPos} setShortestPath={setShortestPath} />
-      <Map  setStartPos={setStartPos} setEndPos={setEndPos} shortestPath={shortestPath} />
+          <Coordinates
+            set_data={set_data}
+            data={show_data}
+            startPos={startPos}
+            endPos={endPos}
+            setStartPos={setStartPos}
+            setEndPos={setEndPos}
+            setShortestPath={setShortestPath}
+            search_value_st ={search_value_st}
+            set_search_value_st={set_search_value_st}
+            search_value_end ={search_value_end}
+            set_search_value_end={set_search_value_end}
+          />
+       
+
+        <Map
+          setStartPos={setStartPos}
+          setEndPos={setEndPos}
+          shortestPath={shortestPath}
+          search_value_st ={search_value_st}
+          set_search_value_st={set_search_value_st}
+          search_value_end ={search_value_end}
+          set_search_value_end={set_search_value_end}
+        />
+     
     </>
-  )
+  );
 }
 
-export default App
+export default App;

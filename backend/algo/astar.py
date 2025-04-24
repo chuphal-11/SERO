@@ -1,32 +1,53 @@
 import heapq
-from algo.eucli import euclidean_distance
-def a_star(graph,start_node,end_node):
+import networkx as nx
 
-    pq = [(0+euclidean_distance(graph,start_node,end_node),0,start_node,)]
+
+def a_star(graph, start_node, end_node):
+    def heuristic(n1, n2):
+        # Use zero heuristic for Dijkstra-like behavior (or add one if needed later)
+        return 0
+
+    pq = [(heuristic(start_node, end_node), 0, start_node)]
     distances = {node: float("inf") for node in graph.nodes}
     distances[start_node] = 0
     previous_nodes = {}
     visited = set()
+
     while pq:
-        euclid_dist,current_dist, current_node = heapq.heappop(pq)
+        _, current_dist, current_node = heapq.heappop(pq)
         if current_node == end_node:
             break
+
+        if current_node in visited:
+            continue
+        visited.add(current_node)
+
         for neighbor in graph.neighbors(current_node):
-            edge_weight = graph[current_node][neighbor]["weight"]
+            if 'weight' not in graph[current_node][neighbor]:
+                continue  # Skip if no weight is defined
+
+            edge_weight = graph[current_node][neighbor]['weight']  # Already in meters
             new_distance = current_dist + edge_weight
-            new_eucl_dist = euclidean_distance(graph,neighbor,end_node)+new_distance
+            estimate = new_distance + heuristic(neighbor, end_node)
 
             if new_distance < distances[neighbor]:
                 distances[neighbor] = new_distance
                 previous_nodes[neighbor] = current_node
-                heapq.heappush(pq, (new_eucl_dist,new_distance, neighbor))
-                visited.add(neighbor)
+                heapq.heappush(pq, (estimate, new_distance, neighbor))
+
+    # Reconstruct the path
     path = []
     current = end_node
     while current in previous_nodes:
-        path.append(graph.nodes[current]['pos'])
+        lat = graph.nodes[current].get('lat') or graph.nodes[current].get('y')
+        lon = graph.nodes[current].get('lon') or graph.nodes[current].get('x')
+        path.append((lat, lon))
         current = previous_nodes[current]
-    path.append(graph.nodes[start_node]['pos'])
+
+    # Add starting point
+    lat_start = graph.nodes[start_node].get('lat') or graph.nodes[start_node].get('y')
+    lon_start = graph.nodes[start_node].get('lon') or graph.nodes[start_node].get('x')
+    path.append((lat_start, lon_start))
     path.reverse()
 
-    return path, distances[end_node],visited
+    return path, distances[end_node], visited  # distance in meters

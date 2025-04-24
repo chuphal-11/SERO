@@ -1,15 +1,24 @@
-
-body {
-  margin: 0;
-  padding: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-  'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-  sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+.map-wrapper {
+  position: relative;
+  height: 100vh;
+  width: 100%;
+}
+.coordinates-panel {
+  position: absolute;
+  top: 20px; /* below navbar */
+  right: 20px; /* stick to the right */
+  z-index: 999;
+  background-color: white;
+  padding: 20px;
+  height: calc(100vh - 80px); /* full height minus navbar */
+  overflow-y: auto;
+  border-radius: 10px 0 0 10px;
+  width: 350px;
+  box-shadow: -2px 0 10px rgba(0, 0, 0, 0.3);
+  transition: right 0.3s ease-in-out;
 }
 
-code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
-  monospace;
+
+.coordinates-panel.collapsed {
+  right: -300px; /* hide off-screen */
 }
